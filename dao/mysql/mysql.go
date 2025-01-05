@@ -9,7 +9,7 @@ import (
 
 var db *sqlx.DB
 
-func Init(conf settings.MysqlConfig) (err error) {
+func Init(conf *settings.MysqlConfig) (err error) {
 
 	//dsn := "root:123456@tcp(127.0.0.1:3306)/db1?charset=utf8mb4&parseTime=True"
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True",

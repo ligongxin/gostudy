@@ -7,9 +7,10 @@ import (
 )
 
 type Config struct {
-	Port  int         `mapstructure:"port"`
-	Mode  string      `mapstructure:"mode"`
-	Mysql MysqlConfig `mapstructure:"mysql"`
+	Port         int    `mapstructure:"port"`
+	Mode         string `mapstructure:"mode"`
+	*MysqlConfig `mapstructure:"mysql"`
+	*LogConfig   `mapstructure:"logger"`
 }
 
 type MysqlConfig struct {
@@ -20,6 +21,14 @@ type MysqlConfig struct {
 	Dbname       string `mapstructure:"dbname"`
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
 	MaxOpenConns int    `mapstructure:"max_open_conns"`
+}
+
+type LogConfig struct {
+	Filename   string `mapstructure:"filename"`
+	MaxSize    int    `mapstructure:"maxsize"`
+	MaxBackups int    `mapstructure:"maxbackups"`
+	MaxAge     int    `mapstructure:"maxage"`
+	Lever      string `mapstructure:"lever"`
 }
 
 var Conf = new(Config)

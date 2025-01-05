@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"web-app/dao/mysql"
+	"web-app/logger"
 	"web-app/settings"
 )
 
@@ -13,9 +14,12 @@ func main() {
 		return
 	}
 	// 2、初始化日志
-
+	if err := logger.Init(settings.Conf.LogConfig); err != nil {
+		fmt.Printf("loger init faild %s\n", err)
+		return
+	}
 	// 3、初始化数据库连接
-	if err := mysql.Init(settings.Conf.Mysql); err != nil {
+	if err := mysql.Init(settings.Conf.MysqlConfig); err != nil {
 		fmt.Printf("mysql init faild %s\n", err)
 		return
 	}
