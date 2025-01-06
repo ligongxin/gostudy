@@ -26,8 +26,8 @@ type MysqlConfig struct {
 type LogConfig struct {
 	Filename   string `mapstructure:"filename"`
 	MaxSize    int    `mapstructure:"maxsize"`
-	MaxBackups int    `mapstructure:"maxbackups"`
-	MaxAge     int    `mapstructure:"maxage"`
+	MaxBackups int    `mapstructure:"max_backups"`
+	MaxAge     int    `mapstructure:"max_age"`
 	Lever      string `mapstructure:"lever"`
 }
 

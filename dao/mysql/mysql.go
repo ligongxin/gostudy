@@ -23,3 +23,7 @@ func Init(conf *settings.MysqlConfig) (err error) {
 	db.SetMaxOpenConns(conf.MaxOpenConns) // 最大连接数
 	return
 }
+
+func Close() {
+	db.Close()
+}

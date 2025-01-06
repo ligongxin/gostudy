@@ -14,6 +14,6 @@ mysql:
 logger:
   filename: "web-app.log"
   maxsize: 20
-  maxbackups: 20
-  maxage: 20
+  max_backups: 20
+  max_age: 20
   lever: "Debug"
