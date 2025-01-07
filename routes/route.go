@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"web-app/controller"
 	"web-app/logger"
 )
 
@@ -16,5 +17,8 @@ func SetupRoute(mode string) *gin.Engine {
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"msg": "pong"})
 	})
+
+	r.POST("/signup", controller.SignupHandler)
+
 	return r
 }
