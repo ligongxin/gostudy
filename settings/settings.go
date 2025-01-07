@@ -7,6 +7,8 @@ import (
 )
 
 type Config struct {
+	Name         string `mapstructure:"name"`
+	Version      string `mapstructure:"version"`
 	Port         int    `mapstructure:"port"`
 	Mode         string `mapstructure:"mode"`
 	*MysqlConfig `mapstructure:"mysql"`

@@ -37,7 +37,7 @@ func main() {
 	// 4、初始化redis连接
 
 	// 5、初始化路由
-	r := routes.SetupRoute()
+	r := routes.SetupRoute(settings.Conf.Mode)
 	// 6、启动服务优化关机
 	src := &http.Server{
 		Addr:    fmt.Sprintf(":%d", settings.Conf.Port),

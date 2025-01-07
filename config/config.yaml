@@ -1,5 +1,7 @@
+name: "web-app"
+version: "v0.0.01"
 port: 8081
-mode: debug
+mode: dev
 
 
 mysql:
