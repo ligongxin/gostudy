@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"web-app/logic"
 	"web-app/models"
 )
 
@@ -17,5 +18,6 @@ func SignupHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"error_msg": "SignUp with invalid param"})
 	}
 	// 2、业务逻辑处理
+	logic.Signup()
 	// 3、返回响应
 }
