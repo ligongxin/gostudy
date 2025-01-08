@@ -18,6 +18,8 @@ func SignupHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"error_msg": "SignUp with invalid param"})
 	}
 	// 2、业务逻辑处理
-	logic.Signup()
+	if err := logic.Signup(req); err != nil {
+		return
+	}
 	// 3、返回响应
 }
