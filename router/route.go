@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"web-app/controller"
 	"web-app/logger"
+	"web-app/pkg/snowflake"
 )
 
 func SetupRoute(mode string) *gin.Engine {
@@ -16,6 +17,9 @@ func SetupRoute(mode string) *gin.Engine {
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"msg": "pong"})
+	})
+	r.GET("/snow", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"msg": snowflake.GenID()})
 	})
 
 	r.POST("/signup", controller.SignupHandler)

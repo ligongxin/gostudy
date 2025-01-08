@@ -12,6 +12,7 @@ import (
 	"web-app/controller"
 	"web-app/dao/mysql"
 	"web-app/logger"
+	"web-app/pkg/snowflake"
 	"web-app/router"
 	"web-app/settings"
 )
@@ -38,9 +39,13 @@ func main() {
 	// 4、初始化redis连接
 
 	// 初始化全局翻译器
-
 	if err := controller.InitTrans("zh"); err != nil {
 		fmt.Printf("Trans init faild %s\n", err)
+		return
+	}
+	// 雪花生成id初始化
+	if err := snowflake.Init("2006-01-02", 1); err != nil {
+		fmt.Printf("snowflake Init faild %s\n", err)
 		return
 	}
 	// 5、初始化路由
