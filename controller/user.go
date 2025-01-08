@@ -27,6 +27,7 @@ func SignupHandler(c *gin.Context) {
 	}
 	// 2、业务逻辑处理
 	if err := logic.Signup(req); err != nil {
+		c.JSON(http.StatusOK, gin.H{"message": err.Error()})
 		return
 	}
 	// 3、返回响应

@@ -1,6 +1,7 @@
 package logic
 
 import (
+	"fmt"
 	"web-app/dao/mysql"
 	"web-app/models"
 	"web-app/pkg/snowflake"
@@ -10,17 +11,17 @@ import (
 func Signup(req *models.ParamSignUp) (err error) {
 	// 1、判断 用户是否存在
 	if err := mysql.CheckUserExist(req.Username); err != nil {
+		fmt.Println(err)
 		return err
 	}
 
 	// 2、生成userid
-	user_id := snowflake.GenID()
+	userId := snowflake.GenID()
 	// 3、保存进数据库
 	u := models.User{
-		UserId:   user_id,
+		UserId:   userId,
 		Username: req.Username,
 		Password: req.Password,
 	}
-	mysql.InsertUser(&u)
-	return
+	return mysql.InsertUser(&u)
 }
