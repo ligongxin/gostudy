@@ -15,5 +15,6 @@ func Signup(req *models.ParamSignUp) (err error) {
 	// 2、生成userid
 
 	// 3、保存进数据库
+
 	return
 }

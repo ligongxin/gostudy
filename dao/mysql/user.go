@@ -1,6 +1,9 @@
 package mysql
 
-import "errors"
+import (
+	"errors"
+	"web-app/models"
+)
 
 // CheckUserExist 查询用户是否存在
 func CheckUserExist(username string) (err error) {
@@ -13,4 +16,8 @@ func CheckUserExist(username string) (err error) {
 		return errors.New("用户已存在")
 	}
 	return
+}
+
+func InsertUser(req *models.ParamSignUp) {
+
 }
