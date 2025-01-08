@@ -23,6 +23,7 @@ func SetupRoute(mode string) *gin.Engine {
 	})
 
 	r.POST("/signup", controller.SignupHandler)
+	r.POST("/login", controller.LoginHandler)
 
 	return r
 }

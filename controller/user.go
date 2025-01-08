@@ -27,9 +27,36 @@ func SignupHandler(c *gin.Context) {
 	}
 	// 2、业务逻辑处理
 	if err := logic.Signup(req); err != nil {
+		zap.L().Error("SignUp failed", zap.Error(err))
 		c.JSON(http.StatusOK, gin.H{"message": err.Error()})
 		return
 	}
 	// 3、返回响应
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+}
+
+// LoginHandler 登录
+func LoginHandler(c *gin.Context) {
+	// 请求参数机校验
+	p := new(models.ParamLogin)
+	if err := c.ShouldBindJSON(p); err != nil {
+		zap.L().Error("login with invalid param", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if ok {
+			c.JSON(http.StatusOK, gin.H{"message": errs.Translate(trans)})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "参数错误"})
+		return
+	}
+	// 登录业务逻辑处理
+	err := logic.Login(p)
+	if err != nil {
+		zap.L().Error("login failed", zap.Error(err))
+		// 判断是不是数据库错误
+		c.JSON(http.StatusOK, gin.H{"message": err.Error()})
+		return
+	}
+	// 返回响应
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
