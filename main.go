@@ -9,9 +9,10 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+	"web-app/controller"
 	"web-app/dao/mysql"
 	"web-app/logger"
-	"web-app/routes"
+	"web-app/router"
 	"web-app/settings"
 )
 
@@ -36,8 +37,14 @@ func main() {
 	defer mysql.Close()
 	// 4、初始化redis连接
 
+	// 初始化全局翻译器
+
+	if err := controller.InitTrans("zh"); err != nil {
+		fmt.Printf("Trans init faild %s\n", err)
+		return
+	}
 	// 5、初始化路由
-	r := routes.SetupRoute(settings.Conf.Mode)
+	r := router.SetupRoute(settings.Conf.Mode)
 	// 6、启动服务优化关机
 	src := &http.Server{
 		Addr:    fmt.Sprintf(":%d", settings.Conf.Port),
