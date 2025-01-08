@@ -53,7 +53,8 @@ func Init() (err error) {
 		fmt.Println("Config Change")
 		if err := viper.Unmarshal(Conf); err != nil {
 			fmt.Printf("Unmarshal Config failed:%v\n", err)
-			panic(fmt.Errorf("unmarshal conf failed, err:%s \n", err))
+			//panic(fmt.Errorf("unmarshal conf failed, err:%s \n", err))
+			//panic()
 		}
 	})
 	return
