@@ -143,7 +143,7 @@ func GinRecovery(stack bool) gin.HandlerFunc {
 	}
 }
 
-// 中间件记录请求和响应
+// ZapLoggerMiddleware 中间件记录请求和响应
 func ZapLoggerMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
