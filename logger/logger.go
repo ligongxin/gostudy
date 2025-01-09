@@ -1,10 +1,12 @@
 package logger
 
 import (
+	"bytes"
 	"github.com/gin-gonic/gin"
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"io"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -69,6 +71,13 @@ func GinLogger() gin.HandlerFunc {
 		start := time.Now()
 		path := c.Request.URL.Path
 		query := c.Request.URL.RawQuery
+		// 备份请求体
+		var bodyBytes []byte
+		if c.Request.Body != nil {
+			bodyBytes, _ = io.ReadAll(c.Request.Body)
+			// 恢复请求体以供后续使用
+			c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
+		}
 		c.Next()
 
 		cost := time.Since(start)
@@ -77,6 +86,8 @@ func GinLogger() gin.HandlerFunc {
 			zap.String("method", c.Request.Method),
 			zap.String("path", path),
 			zap.String("query", query),
+			//zap.Any("form_params", c.Request.Form),
+			zap.String("body", string(bodyBytes)), // 请求体内容
 			zap.String("ip", c.ClientIP()),
 			zap.String("user-agent", c.Request.UserAgent()),
 			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
