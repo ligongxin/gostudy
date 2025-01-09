@@ -58,5 +58,6 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	// 返回响应
+	ResponseSuccess(c, nil)
 	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
