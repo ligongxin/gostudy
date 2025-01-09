@@ -20,10 +20,11 @@ func SignupHandler(c *gin.Context) {
 		// 判断错误是不是validator的错误
 		errs, ok := err.(validator.ValidationErrors)
 		if ok {
-			ResponseErrorWithMsg(c, CodeInvalidParam, errs.Translate(trans))
+			ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
 			return
 		}
 		ResponseError(c, CodeInvalidParam)
+		return
 	}
 	// 2、业务逻辑处理
 	if err := logic.Signup(req); err != nil {
@@ -47,7 +48,7 @@ func LoginHandler(c *gin.Context) {
 		zap.L().Error("login with invalid param", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if ok {
-			ResponseErrorWithMsg(c, CodeInvalidParam, errs.Translate(trans))
+			ResponseErrorWithMsg(c, CodeInvalidParam, removeTopStruct(errs.Translate(trans)))
 			return
 		}
 		ResponseError(c, CodeInvalidParam)
