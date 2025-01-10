@@ -16,7 +16,7 @@ func Init() (err error) {
 	cronScheduler = cron.New(cron.WithSeconds())
 
 	// 注册任务
-	_, err = cronScheduler.AddFunc("0 */2 * * * *", RefreshAndSettle)
+	_, err = cronScheduler.AddFunc("0 */30 * * * *", RefreshAndSettle)
 	if err != nil {
 		return err
 	}
