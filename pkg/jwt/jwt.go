@@ -2,8 +2,7 @@ package jwt
 
 import (
 	"errors"
-	"fmt"
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/dgrijalva/jwt-go"
 	"time"
 )
 
@@ -19,23 +18,39 @@ var CustomSecret = []byte("我爱学习")
 type CustomClaims struct {
 	Username string
 	UserID   int64
-	jwt.RegisteredClaims
+	jwt.StandardClaims
 }
 
 // GenToken 生成JWT
+//func GenToken(username string, userId int64) (string, error) {
+//	// 创建一个我们自己的声明
+//	fmt.Println(username, userId)
+//	claims := CustomClaims{
+//		username,
+//		userId,
+//		jwt.StandardClaims{
+//			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
+//			Issuer:    "go", //签发人
+//		},
+//	}
+//	// 使用指定的签名方法创建签名对象
+//	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+//	// 使用指定的secret签名并获得完整的编码后的字符串token
+//	return token.SignedString(CustomSecret)
+//}
+
 func GenToken(username string, userId int64) (string, error) {
 	// 创建一个我们自己的声明
-	fmt.Println(username, userId)
 	claims := CustomClaims{
-		username,
-		userId,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(TokenExpireDuration)),
-			Issuer:    "web-app", //签发人
+		Username: username,
+		UserID:   userId,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
+			Issuer:    "go", // 签发人
 		},
 	}
 	// 使用指定的签名方法创建签名对象
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	// 使用指定的secret签名并获得完整的编码后的字符串token
 	return token.SignedString(CustomSecret)
 }
