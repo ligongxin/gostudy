@@ -15,6 +15,7 @@ import (
 	"web-app/pkg/snowflake"
 	"web-app/router"
 	"web-app/settings"
+	"web-app/task"
 )
 
 func main() {
@@ -46,6 +47,11 @@ func main() {
 	// 雪花生成id初始化
 	if err := snowflake.Init("2006-01-02", 1); err != nil {
 		fmt.Printf("snowflake Init faild %s\n", err)
+		return
+	}
+	// 注册定时任务
+	if err := task.Init(); err != nil {
+		fmt.Printf("Failed to add cron job: %v", err)
 		return
 	}
 	// 5、初始化路由
