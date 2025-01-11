@@ -25,6 +25,9 @@ func SetupRoute(mode string) *gin.Engine {
 		task.TriggerManualRefreshAndSettle()
 		c.JSON(http.StatusOK, gin.H{"message": "任务已手动触发"})
 	})
+
+	r.GET("/token", controller.GetTokenHandler)
+
 	r.POST("/signup", controller.SignupHandler)
 	r.POST("/login", controller.LoginHandler)
 	r.GET("/snow", middlewares.JwtAuthDiddleWare(), func(c *gin.Context) {

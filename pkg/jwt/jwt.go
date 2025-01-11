@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )
@@ -16,8 +17,7 @@ var CustomSecret = []byte("我爱学习")
 // 假设我们这里需要额外记录一个username字段，所以要自定义结构体
 // 如果想要保存更多信息，都可以添加到这个结构体中
 type CustomClaims struct {
-	Username string
-	UserID   int64
+	UserID int64
 	jwt.StandardClaims
 }
 
@@ -39,11 +39,10 @@ type CustomClaims struct {
 //	return token.SignedString(CustomSecret)
 //}
 
-func GenToken(username string, userId int64) (string, error) {
+func GenToken(userId int64) (string, error) {
 	// 创建一个我们自己的声明
 	claims := CustomClaims{
-		Username: username,
-		UserID:   userId,
+		UserID: userId,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
 			Issuer:    "go", // 签发人
@@ -72,4 +71,24 @@ func ParseToken(tokenStr string) (*CustomClaims, error) {
 		return claims, nil
 	}
 	return nil, errors.New("invalid token")
+}
+
+func GenTokenV1(userId int64) (aToken, rToken string, err error) {
+	// 创建一个我们自己的声明
+	claims := CustomClaims{
+		UserID: userId,
+		StandardClaims: jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(),
+			Issuer:    "go", // 签发人
+		},
+	}
+	// 使用指定的签名方法创建签名对象
+	aToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString(CustomSecret)
+	//refresh token 不需要任何定义
+	rToken, err = jwt.NewWithClaims(jwt.SigningMethodES256, jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 7).Unix(),
+		Issuer:    "go", // 签发人
+	}).SignedString(CustomSecret)
+	fmt.Println(rToken, err)
+	return
 }

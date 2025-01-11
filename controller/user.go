@@ -5,9 +5,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+	"net/http"
+	"strconv"
 	"web-app/dao/mysql"
 	"web-app/logic"
 	"web-app/models"
+	"web-app/pkg/jwt"
 )
 
 // SignupHandler 注册
@@ -68,4 +71,25 @@ func LoginHandler(c *gin.Context) {
 	}
 	// 返回响应
 	ResponseSuccess(c, token)
+}
+
+func GetTokenHandler(c *gin.Context) {
+	uidStr, ok := c.GetQuery("uid")
+	if !ok {
+		zap.L().Error("GetTokenHandler query uid failed", zap.String("uid", uidStr))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	uid, err := strconv.ParseInt(uidStr, 10, 64)
+	if err != nil {
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	aToken, rToken, err := jwt.GenTokenV1(uid)
+	if err != nil {
+		zap.L().Error("GetTokenHandler token生成错误", zap.String("uid", uidStr), zap.Error(err))
+		c.JSON(http.StatusOK, gin.H{"msg": "token生成错误"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"a_token": aToken, "r_token": rToken})
 }
