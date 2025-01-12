@@ -19,3 +19,15 @@ func GetCommunityList() (communityList []*models.Community, err error) {
 	}
 	return
 }
+
+func GetCommunityDetailById(id int64) (communityDetail *models.Community, err error) {
+	communityDetail = new(models.Community)
+	sqlStr := `select * from community where community_id=?`
+	if err = db.Get(communityDetail, sqlStr, id); err != nil {
+		if err == sql.ErrNoRows {
+			zap.L().Warn("where is no community in db")
+			err = ErrorInvalidId
+		}
+	}
+	return communityDetail, err
+}

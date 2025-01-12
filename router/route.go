@@ -39,6 +39,7 @@ func SetupRoute(mode string) *gin.Engine {
 	v1.Use(middlewares.JwtAuthDiddleWare())
 	{
 		v1.GET("/community", controller.CommunityHandler)
+		v1.GET("/community/:id", controller.CommunityDetailHandler)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
