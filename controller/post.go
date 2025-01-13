@@ -63,4 +63,5 @@ func PostDetailHandler(c *gin.Context) {
 // GetPostListHandler 帖子列表
 func GetPostListHandler(c *gin.Context) {
 	// 获取参数
+	logic.GetPostList()
 }

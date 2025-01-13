@@ -24,3 +24,14 @@ func GetPostDetailById(pid int64) (post *models.Post, err error) {
 	}
 	return
 }
+
+func GetPostList() (postList []*models.Post, err error) {
+	sqlStr := "select * from post"
+	if err = db.Select(&postList, sqlStr); err != nil {
+		if err == sql.ErrNoRows {
+			zap.L().Warn("where is no post no data db")
+			err = nil
+		}
+	}
+	return
+}

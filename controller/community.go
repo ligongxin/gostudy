@@ -28,7 +28,7 @@ func CommunityDetailHandler(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
-	data, err := logic.CommunityDetail(id)
+	data, err := logic.GetCommunityDetail(id)
 	if err != nil {
 		zap.L().Error("logic.CommunityDetailHandler() failed", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
