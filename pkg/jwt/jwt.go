@@ -8,7 +8,7 @@ import (
 )
 
 // 定义过期时间
-const TokenExpireDuration = time.Hour * 24
+const TokenExpireDuration = time.Hour * 24 * 365
 
 var CustomSecret = []byte("我爱学习")
 
