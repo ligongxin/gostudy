@@ -42,9 +42,9 @@ func GetPostDetail(pid int64) (data *models.ApiPostDetail, err error) {
 	return
 }
 
-func GetPostList() (data []*models.ApiPostDetail, err error) {
+func GetPostList(page, size int64) (data []*models.ApiPostDetail, err error) {
 	// 查找所有的帖子
-	postList, err := mysql.GetPostList()
+	postList, err := mysql.GetPostList(page, size)
 	if err != nil {
 		zap.L().Error("mysql.GetPostList() failed", zap.Error(err))
 		return nil, err

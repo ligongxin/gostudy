@@ -54,6 +54,7 @@ func PostDetailHandler(c *gin.Context) {
 	}
 	data, err := logic.GetPostDetail(postId)
 	if err != nil {
+		zap.L().Error("PostDetailHandler  logic.GetPostDetail", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
 		return
 	}
@@ -63,5 +64,12 @@ func PostDetailHandler(c *gin.Context) {
 // GetPostListHandler 帖子列表
 func GetPostListHandler(c *gin.Context) {
 	// 获取参数
-	logic.GetPostList()
+	page, size := getPageInfo(c) //获取分页
+	data, err := logic.GetPostList(page, size)
+	if err != nil {
+		zap.L().Error("GetPostListHandler logic.GetPostList", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
 }

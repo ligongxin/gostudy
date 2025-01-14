@@ -15,7 +15,7 @@ type Post struct {
 }
 
 type ApiPostDetail struct {
-	Username   string `json:"author_name"`
-	*Post      `json:"post"`
+	Username string `json:"author_name"`
+	*Post
 	*Community `json:"community"`
 }

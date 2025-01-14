@@ -25,9 +25,9 @@ func GetPostDetailById(pid int64) (post *models.Post, err error) {
 	return
 }
 
-func GetPostList() (postList []*models.Post, err error) {
-	sqlStr := "select * from post"
-	if err = db.Select(&postList, sqlStr); err != nil {
+func GetPostList(page, size int64) (postList []*models.Post, err error) {
+	sqlStr := "select * from post limit ?,?"
+	if err = db.Select(&postList, sqlStr, page-1, size); err != nil {
 		if err == sql.ErrNoRows {
 			zap.L().Warn("where is no post no data db")
 			err = nil
