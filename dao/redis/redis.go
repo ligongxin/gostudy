@@ -3,15 +3,17 @@ package redis
 import (
 	"context"
 	"github.com/redis/go-redis/v9"
+	"web-app/settings"
 )
 
 var client *redis.Client
 
-func Init() (err error) {
+func Init(conf *settings.RedisConfig) (err error) {
 	client = redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
-		Password: "",
-		DB:       1,
+		Addr:     conf.Address,
+		Password: conf.Password,
+		DB:       conf.Dbname,
+		Protocol: conf.PoolSize,
 	})
 	_, err = client.Ping(context.Background()).Result()
 	if err != nil {

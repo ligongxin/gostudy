@@ -40,7 +40,9 @@ func SetupRoute(mode string) *gin.Engine {
 	{
 		v1.GET("/community", controller.CommunityHandler)           // 社区
 		v1.GET("/community/:id", controller.CommunityDetailHandler) //社区详情
-		v1.POST("/post", controller.CreatePostHandler)
+		v1.POST("/post", controller.CreatePostHandler)              // 创建帖子
+		v1.GET("/post/:id", controller.PostDetailHandler)           // 帖子详情
+		v1.GET("/post", controller.GetPostListHandler)              // 帖子列表
 	}
 
 	r.NoRoute(func(c *gin.Context) {

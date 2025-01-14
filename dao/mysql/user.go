@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"database/sql"
 	"encoding/hex"
+	"go.uber.org/zap"
 	"web-app/models"
 )
 
@@ -53,6 +54,18 @@ func Login(user *models.User) (err error) {
 	// 判断密码
 	if user.Password != encryptPassword(oPassword) {
 		return ErrorInvalidPassword
+	}
+	return
+}
+
+func GetUserById(id int64) (user *models.User, err error) {
+	user = new(models.User)
+	sqlStr := `select * from user where user_id = ?`
+	if err = db.Get(user, sqlStr, id); err != nil {
+		if err == sql.ErrNoRows {
+			zap.L().Warn("where is no user in db")
+			err = ErrorInvalidUserId
+		}
 	}
 	return
 }
