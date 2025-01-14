@@ -11,6 +11,7 @@ import (
 	"time"
 	"web-app/controller"
 	"web-app/dao/mysql"
+	"web-app/dao/redis"
 	"web-app/logger"
 	"web-app/pkg/snowflake"
 	"web-app/router"
@@ -37,7 +38,13 @@ func main() {
 		return
 	}
 	defer mysql.Close()
+
 	// 4、初始化redis连接
+	if err := redis.Init(settings.Conf.RedisConfig); err != nil {
+		fmt.Printf("redis init faild %s\n", err)
+		return
+	}
+	defer redis.Close()
 
 	// 初始化全局翻译器
 	if err := controller.InitTrans("zh"); err != nil {

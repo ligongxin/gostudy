@@ -13,6 +13,12 @@ mysql:
   max_idle_conns: 20
   max_open_conns: 10
 
+redis:
+  address: "127.0.0.1:6379"
+  password: ""
+  dbname: 1
+  poolsize: 20
+
 logger:
   filename: "web-app.log"
   maxsize: 20

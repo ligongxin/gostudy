@@ -13,6 +13,7 @@ type Config struct {
 	Mode         string `mapstructure:"mode"`
 	*MysqlConfig `mapstructure:"mysql"`
 	*LogConfig   `mapstructure:"logger"`
+	*RedisConfig `mapstructure:"redis"`
 }
 
 type MysqlConfig struct {
@@ -23,6 +24,13 @@ type MysqlConfig struct {
 	Dbname       string `mapstructure:"dbname"`
 	MaxIdleConns int    `mapstructure:"max_idle_conns"`
 	MaxOpenConns int    `mapstructure:"max_open_conns"`
+}
+
+type RedisConfig struct {
+	Address  string `mapstructure:"address"`
+	Password string `mapstructure:"password"`
+	Dbname   int    `mapstructure:"dbname"`
+	PoolSize int    `mapstructure:"poolsize"`
 }
 
 type LogConfig struct {
