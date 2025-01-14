@@ -58,7 +58,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	// 登录业务逻辑处理
-	token, err := logic.Login(p)
+	data, err := logic.Login(p)
 	if err != nil {
 		zap.L().Error("login failed", zap.String("username", p.Username), zap.Error(err))
 		// 判断是不是数据库错误
@@ -70,7 +70,7 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 	// 返回响应
-	ResponseSuccess(c, token)
+	ResponseSuccess(c, data)
 }
 
 func GetTokenHandler(c *gin.Context) {

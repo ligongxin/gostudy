@@ -12,3 +12,8 @@ type ParamLogin struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
+
+type ResponseLogin struct {
+	UserId int64  `json:"user_id"`
+	Token  string `json:"token"`
+}
