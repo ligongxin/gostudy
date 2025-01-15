@@ -21,4 +21,5 @@ func PostVoteController(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
+	ResponseSuccess(c, p)
 }
