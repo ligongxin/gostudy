@@ -43,6 +43,7 @@ func SetupRoute(mode string) *gin.Engine {
 		v1.POST("/post", controller.CreatePostHandler)              // 创建帖子
 		v1.GET("/post/:id", controller.PostDetailHandler)           // 帖子详情
 		v1.GET("/post", controller.GetPostListHandler)              // 帖子列表
+		v1.POST("/vote", controller.PostVoteController)
 	}
 
 	r.NoRoute(func(c *gin.Context) {
