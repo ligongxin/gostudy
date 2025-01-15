@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"strings"
 	"web-app/controller"
+	"web-app/dao/redis"
 	"web-app/pkg/jwt"
 )
 
@@ -29,9 +30,17 @@ func JwtAuthDiddleWare() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		//解析token
 		mc, err := jwt.ParseToken(parts[1])
 		if err != nil {
 			controller.ResponseError(c, controller.COdeInvalidToken)
+			c.Abort()
+			return
+		}
+		// 判断是否与redis一致
+		sToken, err := redis.GetTokenToRedis(mc.UserID)
+		if err != nil || sToken != parts[1] {
+			controller.ResponseError(c, controller.CodeUserNotLogin)
 			c.Abort()
 			return
 		}

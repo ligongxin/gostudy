@@ -6,7 +6,10 @@ import (
 	"web-app/settings"
 )
 
-var client *redis.Client
+var (
+	client *redis.Client
+	ctx    = context.Background()
+)
 
 func Init(conf *settings.RedisConfig) (err error) {
 	client = redis.NewClient(&redis.Options{
@@ -15,7 +18,7 @@ func Init(conf *settings.RedisConfig) (err error) {
 		DB:       conf.Dbname,
 		Protocol: conf.PoolSize,
 	})
-	_, err = client.Ping(context.Background()).Result()
+	_, err = client.Ping(ctx).Result()
 	if err != nil {
 		return err
 	}
