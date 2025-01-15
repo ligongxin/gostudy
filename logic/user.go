@@ -3,6 +3,7 @@ package logic
 import (
 	"fmt"
 	"web-app/dao/mysql"
+	"web-app/dao/redis"
 	"web-app/models"
 	"web-app/pkg/jwt"
 	"web-app/pkg/snowflake"
@@ -45,6 +46,11 @@ func Login(p *models.ParamLogin) (data *models.ResponseLogin, err error) {
 	data = &models.ResponseLogin{
 		UserId: user.UserId,
 		Token:  token,
+	}
+
+	// 存token到redis
+	if err = redis.SaveToken(user.UserId, token); err != nil {
+		return nil, err
 	}
 	return data, nil
 }
