@@ -3,6 +3,7 @@ package logic
 import (
 	"fmt"
 	"web-app/dao/mysql"
+	"web-app/dao/redis"
 	"web-app/models"
 	"web-app/pkg/jwt"
 	"web-app/pkg/snowflake"
@@ -27,15 +28,29 @@ func Signup(req *models.ParamSignUp) (err error) {
 	return mysql.InsertUser(&u)
 }
 
-func Login(p *models.ParamLogin) (token string, err error) {
+func Login(p *models.ParamLogin) (data *models.ResponseLogin, err error) {
 	user := &models.User{
 		Username: p.Username,
 		Password: p.Password,
 	}
 	// 传递的是指针，就能拿到user.UserID
-	if err := mysql.Login(user); err != nil {
-		return "", err
+	if err = mysql.Login(user); err != nil {
+		return nil, err
 	}
 	// 生成token
-	return jwt.GenToken(user.UserId)
+	var token string
+	token, err = jwt.GenToken(user.UserId)
+	if err != nil {
+		return
+	}
+	data = &models.ResponseLogin{
+		UserId: user.UserId,
+		Token:  token,
+	}
+
+	// 存token到redis
+	if err = redis.SaveToken(user.UserId, token); err != nil {
+		return nil, err
+	}
+	return data, nil
 }

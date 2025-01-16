@@ -26,7 +26,7 @@ func Init() (err error) {
 	return nil
 }
 
-// 暴露方法：手动触发任务（可供外部调用）
+// TriggerManualRefreshAndSettle 暴露方法：手动触发任务（可供外部调用）
 func TriggerManualRefreshAndSettle() {
 	go RefreshAndSettle()
 }

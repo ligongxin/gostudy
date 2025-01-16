@@ -8,7 +8,7 @@ import (
 type ResponseData struct {
 	Code    ResCode     `json:"code"`
 	Message interface{} `json:"message"`
-	Data    interface{} `json:"data"`
+	Data    interface{} `json:"data,omitempty"` // 为空不返回
 }
 
 func ResponseSuccess(c *gin.Context, data interface{}) {
