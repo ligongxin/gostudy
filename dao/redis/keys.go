@@ -9,3 +9,7 @@ const (
 	KeyPostVotedZSetPrefix = "post:voted:" // zSet 记录帖子及投票类型 参数是post_id
 	KeyUserToken           = "user:token:" // string 用户的token，需要传user_id
 )
+
+func getRedisKey(key string) string {
+	return KeyPrefix + key
+}

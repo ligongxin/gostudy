@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+	"web-app/logic"
 	"web-app/models"
 )
 
@@ -21,5 +22,13 @@ func PostVoteController(c *gin.Context) {
 		ResponseError(c, CodeInvalidParam)
 		return
 	}
+	// 获取当前用户userid
+	userId, err := getCurrentUser(c)
+	if err != nil {
+		ResponseError(c, CodeUserNotLogin)
+		return
+	}
+
+	logic.VoteForPost(userId, p)
 	ResponseSuccess(c, p)
 }
