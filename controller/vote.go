@@ -29,7 +29,7 @@ func PostVoteController(c *gin.Context) {
 		return
 	}
 	if err := logic.VoteForPost(userId, p); err != nil {
-
+		ResponseErrorWithMsg(c, CodeServerBusy, err.Error())
 		return
 	}
 	ResponseSuccess(c, nil)

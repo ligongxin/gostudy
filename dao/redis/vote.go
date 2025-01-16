@@ -53,20 +53,19 @@ func PostVote(userId, postId string, value float64) error {
 	//判断差值
 	diff := math.Abs(value - ov)
 	// 更新帖子的分数 更新
-	err := client.ZIncrBy(ctx, getRedisKey(KeyPostScore), PostScore*diff*op, postId).Err()
-	if err != nil {
-		return err
-	}
+	pipe := client.TxPipeline()
+	pipe.ZIncrBy(ctx, getRedisKey(KeyPostScore), PostScore*diff*op, postId)
 	// 更新用户投票信息
 	if value == 0 {
-		client.ZRem(ctx, getRedisKey(KeyPostVotedZSetPrefix+postId), userId)
+		pipe.ZRem(ctx, getRedisKey(KeyPostVotedZSetPrefix+postId), userId)
 	} else {
-		client.ZAdd(ctx, getRedisKey(KeyPostVotedZSetPrefix+postId), redis.Z{
+		pipe.ZAdd(ctx, getRedisKey(KeyPostVotedZSetPrefix+postId), redis.Z{
 			Score:  value,
 			Member: userId,
 		})
 	}
-	return nil
+	_, err := pipe.Exec(ctx)
+	return err
 }
 
 // 插入redis
