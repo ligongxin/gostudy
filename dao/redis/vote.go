@@ -2,15 +2,21 @@ package redis
 
 import (
 	"errors"
+	"github.com/redis/go-redis/v9"
+	"math"
 	"time"
 	"web-app/models"
 )
 
 const (
 	oneWeekOnSecond = 7 * 24 * 3600
+	PostScore       = 423
 )
 
-var ErrorVoteTimeExPried = errors.New("投票时间已过")
+var (
+	ErrorVoteTimeExPried = errors.New("投票时间已过")
+	ErrorVoteRepeated    = errors.New("不能重复投票")
+)
 
 // 1、支持投赞成票（1）、反对票（-1）、取消投票（0）
 /*
@@ -32,7 +38,54 @@ func PostVote(userId, postId string, value float64) error {
 	if float64(time.Now().Unix())-postTime > oneWeekOnSecond {
 		return ErrorVoteTimeExPried
 	}
-	// 获取帖子的分数
-	ol := client.ZScore(ctx, getRedisKey(KeyPostScore), postId).Val()
+	// 获取用户的投票记录
+	ov := client.ZScore(ctx, getRedisKey(KeyPostVotedZSetPrefix+postId), userId).Val()
+	// 重复投票
+	if ov == value {
+		return ErrorVoteRepeated
+	}
+	var op float64
+	if value > ov {
+		op = 1
+	} else {
+		op = -1
+	}
+	//判断差值
+	diff := math.Abs(value - ov)
+	// 更新帖子的分数 更新
+	err := client.ZIncrBy(ctx, getRedisKey(KeyPostScore), PostScore*diff*op, postId).Err()
+	if err != nil {
+		return err
+	}
+	// 更新用户投票信息
+	if value == 0 {
+		client.ZRem(ctx, getRedisKey(KeyPostVotedZSetPrefix+postId), userId)
+	} else {
+		client.ZAdd(ctx, getRedisKey(KeyPostVotedZSetPrefix+postId), redis.Z{
+			Score:  value,
+			Member: userId,
+		})
+	}
+	return nil
+}
 
+// 插入redis
+func CreatePostCache(p *models.Post) error {
+	// 添加 帖子发布时间
+	score := float64(time.Now().Unix())
+
+	// 开启一个TxPipeline事务
+	pipe := client.TxPipeline()
+	pipe.ZAdd(ctx, getRedisKey(KeyPostTime), redis.Z{
+		Score:  score,
+		Member: p.PostId,
+	})
+	// 添加帖子的分数
+	pipe.ZAdd(ctx, getRedisKey(KeyPostScore), redis.Z{
+		Score:  score,
+		Member: p.PostId,
+	})
+	//通过Exec函数提交redis事务
+	_, err := pipe.Exec(ctx)
+	return err
 }

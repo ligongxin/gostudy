@@ -6,8 +6,9 @@ import (
 	"web-app/models"
 )
 
-func VoteForPost(userId int64, p *models.ParamVoteData) {
-	if err := redis.PostVote(strconv.Itoa(int(userId)), p.PostID, float64(p.Direction)); err != nil {
-		return
+func VoteForPost(userId int64, p *models.ParamVoteData) (err error) {
+	if err = redis.PostVote(strconv.Itoa(int(userId)), p.PostID, float64(p.Direction)); err != nil {
+		return err
 	}
+	return
 }

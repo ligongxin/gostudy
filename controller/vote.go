@@ -28,7 +28,9 @@ func PostVoteController(c *gin.Context) {
 		ResponseError(c, CodeUserNotLogin)
 		return
 	}
+	if err := logic.VoteForPost(userId, p); err != nil {
 
-	logic.VoteForPost(userId, p)
-	ResponseSuccess(c, p)
+		return
+	}
+	ResponseSuccess(c, nil)
 }
