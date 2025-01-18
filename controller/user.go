@@ -44,6 +44,7 @@ func SignupHandler(c *gin.Context) {
 }
 
 // LoginHandler 登录
+// @Summary
 func LoginHandler(c *gin.Context) {
 	// 请求参数机校验
 	p := new(models.ParamLogin)

@@ -2,7 +2,7 @@ package middlewares
 
 import (
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	"strconv"
 	"strings"
 	"web-app/controller"
 	"web-app/dao/redis"
@@ -39,8 +39,8 @@ func JwtAuthDiddleWare() gin.HandlerFunc {
 			return
 		}
 		// 判断是否与redis一致
-		sToken, err := redis.GetTokenToRedis(mc.UserID)
-		zap.L().Info("获取数据", zap.String("sToken", sToken), zap.Error(err))
+		sToken, err := redis.GetTokenToRedis(strconv.Itoa(int(mc.UserID)))
+		//zap.L().Info("获取数据", zap.String("sToken", sToken), zap.Error(err))
 		if err != nil || sToken != parts[1] {
 			controller.ResponseError(c, controller.CodeUserNotLogin)
 			c.Abort()

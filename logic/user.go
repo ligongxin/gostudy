@@ -2,6 +2,7 @@ package logic
 
 import (
 	"fmt"
+	"strconv"
 	"web-app/dao/mysql"
 	"web-app/dao/redis"
 	"web-app/models"
@@ -49,7 +50,7 @@ func Login(p *models.ParamLogin) (data *models.ResponseLogin, err error) {
 	}
 
 	// 存token到redis
-	if err = redis.SaveToken(user.UserId, token); err != nil {
+	if err = redis.SaveToken(strconv.Itoa(int(user.UserId)), token); err != nil {
 		return nil, err
 	}
 	return data, nil

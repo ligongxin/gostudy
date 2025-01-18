@@ -2,8 +2,11 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/files"
+	gs "github.com/swaggo/gin-swagger"
 	"net/http"
 	"web-app/controller"
+	_ "web-app/docs"
 	"web-app/logger"
 	"web-app/middlewares"
 	"web-app/pkg/snowflake"
@@ -15,6 +18,8 @@ func SetupRoute(mode string) *gin.Engine {
 		gin.SetMode(gin.ReleaseMode) // 设置为生产模式
 	}
 	r := gin.New()
+
+	r.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
 	r.GET("/ping", func(c *gin.Context) {
