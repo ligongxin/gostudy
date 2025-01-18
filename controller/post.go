@@ -62,6 +62,15 @@ func PostDetailHandler(c *gin.Context) {
 }
 
 // GetPostListHandler 帖子列表
+// GetPostListHandler2 升级版帖子列表接口
+// @Summary 升级版帖子列表接口
+// @Description 可按社区按时间或分数排序查询帖子列表接口
+// @Tags 帖子相关接口
+// @Accept application/json
+// @Produce application/json
+// @Param Authorization header string false "Bearer 用户令牌"
+// @Security ApiKeyAuth
+// @Router /posts2 [get]
 func GetPostListHandler(c *gin.Context) {
 	// 获取参数
 	page, size := getPageInfo(c) //获取分页
