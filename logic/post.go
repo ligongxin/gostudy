@@ -78,3 +78,11 @@ func GetPostList(page, size int64) (data []*models.ApiPostDetail, err error) {
 	}
 	return
 }
+
+// todo
+func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err error) {
+	// 判断传的order
+
+	// 去redis
+	return
+}
