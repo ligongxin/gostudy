@@ -81,8 +81,18 @@ func GetPostList(page, size int64) (data []*models.ApiPostDetail, err error) {
 
 // todo
 func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err error) {
-	// 判断传的order
-
-	// 去redis
+	// 去redis 取出帖子列表
+	ids, err := redis.GetPostIdsInOrder(p)
+	zap.L().Debug("redis.GetPostIdsInOrder", zap.Any("ids", ids))
+	if err != nil {
+		zap.L().Error("redis.GetPostIdsInOrder failed ", zap.Error(err))
+		return
+	}
+	if len(ids) == 0 {
+		zap.L().Warn("redis.GetPostIdsInOrder len(ids) == 0 ")
+		return
+	}
+	// 根据帖子列表查询所有帖子数据
+	mysql.GetPostListByIds(ids)
 	return
 }

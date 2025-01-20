@@ -1,6 +1,9 @@
 package models
 
-const OrderTime = "time"
+const (
+	OrderTime  = "time"
+	OrderScore = "score"
+)
 
 // ParamSignUp 定义注册请求参数
 type ParamSignUp struct {

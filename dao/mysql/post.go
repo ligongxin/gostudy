@@ -7,7 +7,7 @@ import (
 )
 
 func CreatePost(p *models.Post) (err error) {
-	sqlStr := "insert into post (post_id,title,content,author_id,community_id) value(?,?,?,?,?)"
+	sqlStr := `insert into post (post_id,title,content,author_id,community_id) value(?,?,?,?,?)`
 	_, err = db.Exec(sqlStr, p.PostId, p.Title, p.Content, p.AuthorId, p.CommunityId)
 	// 保存到数据库
 	return
@@ -34,4 +34,8 @@ func GetPostList(page, size int64) (postList []*models.Post, err error) {
 		}
 	}
 	return
+}
+
+func GetPostListByIds([]string) {
+	// 使用sqlx in 查询
 }
