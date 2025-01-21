@@ -93,6 +93,35 @@ func GetPostList2(p *models.ParamPostList) (data []*models.ApiPostDetail, err er
 		return
 	}
 	// 根据帖子列表查询所有帖子数据
-	mysql.GetPostListByIds(ids)
+	postList, err := mysql.GetPostListByIds(ids)
+	if err != nil {
+		zap.L().Error("mysql.GetPostListByIds(ids) failed", zap.Error(err))
+		return
+	}
+	// 查询帖子每个帖子对应的分数
+	voteScore := redis.GetPostVoteData(ids)
+
+	for idx, post := range postList {
+		// 查找帖子作者
+		author, err := mysql.GetUserById(post.AuthorId)
+		if err != nil {
+			zap.L().Error("mysql.GetUserById(post.AuthorId) failed", zap.Int64("post.AuthorId", post.AuthorId), zap.Error(err))
+			continue
+		}
+		// 查询帖子所属社区详情
+		community, err := mysql.GetCommunityDetailById(post.CommunityId)
+		if err != nil {
+			zap.L().Error("mysql.GetCommunityDetailById failed", zap.Int64("post.CommunityId", post.CommunityId), zap.Error(err))
+			continue
+		}
+		postDetail := &models.ApiPostDetail{
+			Username:  author.Username,
+			VoteScore: voteScore[idx],
+			Post:      post,
+			Community: community,
+		}
+		data = append(data, postDetail)
+	}
+
 	return
 }

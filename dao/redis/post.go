@@ -1,6 +1,8 @@
 package redis
 
-import "web-app/models"
+import (
+	"web-app/models"
+)
 
 func GetPostIdsInOrder(p *models.ParamPostList) ([]string, error) {
 	key := getRedisKey(KeyPostTime)
@@ -12,4 +14,15 @@ func GetPostIdsInOrder(p *models.ParamPostList) ([]string, error) {
 	start := (p.Page - 1) * p.Size
 	end := p.Size*p.Page - 1
 	return client.ZRevRange(ctx, key, start, end).Result()
+}
+
+func GetPostVoteData(ids []string) (data []int64) {
+	data = make([]int64, 0, len(ids))
+	//统计每篇帖子的投票数量
+	for _, post_id := range ids {
+		key := getRedisKey(KeyPostVotedZSetPrefix + post_id)
+		v := client.ZCount(ctx, key, "1", "1").Val()
+		data = append(data, v)
+	}
+	return
 }
