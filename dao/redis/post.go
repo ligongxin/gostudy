@@ -26,3 +26,7 @@ func GetPostVoteData(ids []string) (data []int64) {
 	}
 	return
 }
+
+func GetCommunityPostIDsInOrder(p *models.ParamCommunityPostList) ([]string, error) {
+	return nil, nil
+}
