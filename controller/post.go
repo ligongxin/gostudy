@@ -61,6 +61,19 @@ func PostDetailHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
+// 帖子列表
+func GetPostListHandler(c *gin.Context) {
+	// 获取参数
+	page, size := getPageInfo(c) //获取分页
+	data, err := logic.GetPostList(page, size)
+	if err != nil {
+		zap.L().Error("GetPostListHandler logic.GetPostList", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}
+
 // GetPostListHandler 帖子列表
 // GetPostListHandler2 升级版帖子列表接口
 // @Summary 升级版帖子列表接口
@@ -71,10 +84,43 @@ func PostDetailHandler(c *gin.Context) {
 // @Param Authorization header string false "Bearer 用户令牌"
 // @Security ApiKeyAuth
 // @Router /posts2 [get]
-func GetPostListHandler(c *gin.Context) {
+func GetPostListHandler2(c *gin.Context) {
 	// 获取参数
-	page, size := getPageInfo(c) //获取分页
-	data, err := logic.GetPostList(page, size)
+	p := &models.ParamPostList{
+		Page:  1,
+		Size:  10,
+		Order: models.OrderTime,
+	}
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("GetPostListHandler2 ShouldBindQuery", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	data, err := logic.GetPostList2(p)
+	if err != nil {
+		zap.L().Error("GetPostListHandler logic.GetPostList", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}
+
+// @Summary 查询社区下的帖子
+func GetCommunityPostListHandler(c *gin.Context) {
+	p := &models.ParamCommunityPostList{
+		ParamPostList: &models.ParamPostList{
+			Page:  1,
+			Size:  10,
+			Order: models.OrderTime,
+		},
+		CommunityId: 0,
+	}
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("GetPostListHandler2 ShouldBindQuery", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	data, err := logic.GetCommunityPostList(p)
 	if err != nil {
 		zap.L().Error("GetPostListHandler logic.GetPostList", zap.Error(err))
 		ResponseError(c, CodeServerBusy)

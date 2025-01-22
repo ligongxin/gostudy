@@ -19,8 +19,8 @@ import (
 	"web-app/task"
 )
 
-// @title 这里写标题
-// @version 1.0
+// @title 投票
+// @version 1.0.00
 // @description 这里写描述信息
 // @termsOfService http://swagger.io/terms/
 
@@ -31,8 +31,8 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host 这里写接口服务的host
-// @BasePath 这里写base path
+// @host 127.0.0.1
+// @BasePath
 func main() {
 	// 1、加载配置
 	if err := settings.Init(); err != nil {
