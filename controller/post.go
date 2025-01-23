@@ -61,6 +61,7 @@ func PostDetailHandler(c *gin.Context) {
 	ResponseSuccess(c, data)
 }
 
+// 帖子列表
 func GetPostListHandler(c *gin.Context) {
 	// 获取参数
 	page, size := getPageInfo(c) //获取分页
@@ -96,6 +97,30 @@ func GetPostListHandler2(c *gin.Context) {
 		return
 	}
 	data, err := logic.GetPostList2(p)
+	if err != nil {
+		zap.L().Error("GetPostListHandler logic.GetPostList", zap.Error(err))
+		ResponseError(c, CodeServerBusy)
+		return
+	}
+	ResponseSuccess(c, data)
+}
+
+// @Summary 查询社区下的帖子
+func GetCommunityPostListHandler(c *gin.Context) {
+	p := &models.ParamCommunityPostList{
+		ParamPostList: &models.ParamPostList{
+			Page:  1,
+			Size:  10,
+			Order: models.OrderTime,
+		},
+		CommunityId: 0,
+	}
+	if err := c.ShouldBindQuery(p); err != nil {
+		zap.L().Error("GetPostListHandler2 ShouldBindQuery", zap.Error(err))
+		ResponseError(c, CodeInvalidParam)
+		return
+	}
+	data, err := logic.GetCommunityPostList(p)
 	if err != nil {
 		zap.L().Error("GetPostListHandler logic.GetPostList", zap.Error(err))
 		ResponseError(c, CodeServerBusy)
