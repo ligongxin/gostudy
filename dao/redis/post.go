@@ -19,8 +19,8 @@ func GetPostIdsInOrder(p *models.ParamPostList) ([]string, error) {
 func GetPostVoteData(ids []string) (data []int64) {
 	data = make([]int64, 0, len(ids))
 	//统计每篇帖子的投票数量
-	for _, post_id := range ids {
-		key := getRedisKey(KeyPostVotedZSetPrefix + post_id)
+	for _, postId := range ids {
+		key := getRedisKey(KeyPostVotedZSetPrefix + postId)
 		v := client.ZCount(ctx, key, "1", "1").Val()
 		data = append(data, v)
 	}
