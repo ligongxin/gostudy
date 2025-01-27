@@ -22,6 +22,10 @@ func SetupRoute(mode string) *gin.Engine {
 	r.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
+	// 加载静态文件
+	r.LoadHTMLFiles("./templates/index.html")
+	r.Static("/static", "./static")
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"msg": "pong"})
 	})
