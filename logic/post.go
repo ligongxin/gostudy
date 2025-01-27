@@ -15,8 +15,7 @@ func CreatePost(p *models.Post) error {
 	if err := mysql.CreatePost(p); err != nil {
 		return err
 	}
-	redis.CreatePostCache(p)
-	return nil
+	return redis.CreatePostCache(p)
 
 }
 

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/redis/go-redis/v9"
 	"math"
+	"strconv"
 	"time"
 	"web-app/models"
 )
@@ -32,6 +33,7 @@ direction =-1
 
 帖子时间超过7天，不能投票
 */
+// PostVote 投票
 func PostVote(userId, postId string, value float64) error {
 	// 获取帖子发布时间 当前帖子的时间是否超过7天
 	postTime := client.ZScore(ctx, getRedisKey(KeyPostTime), postId).Val()
@@ -68,7 +70,7 @@ func PostVote(userId, postId string, value float64) error {
 	return err
 }
 
-// 插入redis
+// CreatePostCache 插入redis
 func CreatePostCache(p *models.Post) error {
 	// 添加 帖子发布时间
 	score := float64(time.Now().Unix())
@@ -84,6 +86,9 @@ func CreatePostCache(p *models.Post) error {
 		Score:  score,
 		Member: p.PostId,
 	})
+	// 添加社区下发布的帖子
+	key := getRedisKey(KeyCommunitySetPF + strconv.Itoa(int(p.CommunityId)))
+	pipe.SAdd(ctx, key, p.PostId)
 	//通过Exec函数提交redis事务
 	_, err := pipe.Exec(ctx)
 	return err
