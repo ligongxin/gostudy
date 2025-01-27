@@ -8,6 +8,7 @@ const (
 	KeyPostScore           = "post:score"  // zSet 帖子分数
 	KeyPostVotedZSetPrefix = "post:voted:" // zSet 记录帖子及投票类型 参数是post_id
 	KeyUserToken           = "user:token:" // string 用户的token，需要传user_id
+	KeyCommunitySetPF      = "community:"  // 传社区uid
 )
 
 func getRedisKey(key string) string {
